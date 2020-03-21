@@ -1,0 +1,272 @@
+{
+	"info": {
+		"_postman_id": "844c6b3c-dd4a-4569-b029-b5c5376a9417",
+		"name": "Trello",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Board",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "415c044f-75cc-4c1b-8498-63dcdf0d1e50",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"console.log(\"Board Id \" + pm.response.json().id);",
+							"pm.environment.set(\"boardId\",pm.response.json().id); ",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://api.trello.com/1/boards?key={{trelloKey}}&token={{trelloToken}}&name=Project Postman&defaultLists=false",
+					"protocol": "https",
+					"host": [
+						"api",
+						"trello",
+						"com"
+					],
+					"path": [
+						"1",
+						"boards"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{trelloKey}}"
+						},
+						{
+							"key": "token",
+							"value": "{{trelloToken}}"
+						},
+						{
+							"key": "name",
+							"value": "Project Postman"
+						},
+						{
+							"key": "defaultLists",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Created list TODO",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "415c044f-75cc-4c1b-8498-63dcdf0d1e50",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"verify board list name\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"TODO\");",
+							"",
+							"});",
+							"",
+							"pm.test(\"closed status\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.closed).to.eql(false);",
+							"});",
+							"",
+							"console.log(\"list Id \" + pm.response.json().id );",
+							"",
+							"pm.environment.set(\"listId\", pm.response.json().id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://api.trello.com/1/lists?name=TODO&idBoard={{boardId}}&key={{trelloKey}}&token={{trelloToken}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"trello",
+						"com"
+					],
+					"path": [
+						"1",
+						"lists"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "TODO"
+						},
+						{
+							"key": "idBoard",
+							"value": "{{boardId}}"
+						},
+						{
+							"key": "key",
+							"value": "{{trelloKey}}"
+						},
+						{
+							"key": "token",
+							"value": "{{trelloToken}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Created list DONE",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6cd81d5d-e29a-4196-b2c7-c7feb4712525",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"verify board list name\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"DONE\");",
+							"});",
+							"",
+							"pm.test(\"closed status\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.closed).to.eql(false);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://api.trello.com/1/lists?name=DONE&idBoard={{boardId}}&key={{trelloKey}}&token={{trelloToken}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"trello",
+						"com"
+					],
+					"path": [
+						"1",
+						"lists"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "DONE"
+						},
+						{
+							"key": "idBoard",
+							"value": "{{boardId}}"
+						},
+						{
+							"key": "key",
+							"value": "{{trelloKey}}"
+						},
+						{
+							"key": "token",
+							"value": "{{trelloToken}}"
+						},
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Card - Learn Postman",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0cb7545e-ddc4-434b-bda7-fd4c384f7bd9",
+						"exec": [
+							"pm.environment.unset(\"listId\");",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Card name Learn Postman\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"Learn Postman\");",
+							"});",
+							"",
+							"pm.test(\"card is not closed\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.closed).to.eql(false);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://api.trello.com/1/cards?idList={{listId}}&key={{trelloKey}}&token={{trelloToken}}&name=Learn Postman",
+					"protocol": "https",
+					"host": [
+						"api",
+						"trello",
+						"com"
+					],
+					"path": [
+						"1",
+						"cards"
+					],
+					"query": [
+						{
+							"key": "idList",
+							"value": "{{listId}}"
+						},
+						{
+							"key": "key",
+							"value": "{{trelloKey}}"
+						},
+						{
+							"key": "token",
+							"value": "{{trelloToken}}"
+						},
+						{
+							"key": "name",
+							"value": "Learn Postman"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
