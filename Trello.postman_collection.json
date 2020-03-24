@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "844c6b3c-dd4a-4569-b029-b5c5376a9417",
-		"name": "Trello",
+		"_postman_id": "955e8da9-b64b-49de-aee0-010d9d70dfa2",
+		"name": "Trello assignment 2",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -19,6 +19,31 @@
 							"",
 							"console.log(\"Board Id \" + pm.response.json().id);",
 							"pm.environment.set(\"boardId\",pm.response.json().id); ",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "63fe243e-31b4-4d0d-aaae-39df3383ea79",
+						"exec": [
+							"",
+							"",
+							"",
+							"var boardno = pm.environment.get(\"boardNumber\");",
+							"console.log(\"Boardno value: \" + boardno );",
+							"",
+							"if(boardno){",
+							"    console.log(\"in if Condition\");",
+							"    pm.environment.set(\"boardNumber\", boardno+1);",
+							"    ",
+							"}",
+							"else{",
+							"    console.log(\"in else Condition\");",
+							"    pm.environment.set(\"boardNumber\", 1);",
+							"}",
 							"",
 							"",
 							""
@@ -31,7 +56,7 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "https://api.trello.com/1/boards?key={{trelloKey}}&token={{trelloToken}}&name=Project Postman&defaultLists=false",
+					"raw": "https://api.trello.com/1/boards?key={{trelloKey}}&token={{trelloToken}}&name=Board{{boardNumber}}",
 					"protocol": "https",
 					"host": [
 						"api",
@@ -53,11 +78,7 @@
 						},
 						{
 							"key": "name",
-							"value": "Project Postman"
-						},
-						{
-							"key": "defaultLists",
-							"value": "false"
+							"value": "Board{{boardNumber}}"
 						}
 					]
 				}
@@ -140,6 +161,9 @@
 					"script": {
 						"id": "6cd81d5d-e29a-4196-b2c7-c7feb4712525",
 						"exec": [
+							"",
+							"",
+							"pm.environment.set(\"doneListId\", pm.response.json().id);",
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
@@ -203,14 +227,14 @@
 			"response": []
 		},
 		{
-			"name": "Create Card - Learn Postman",
+			"name": "Create Card-Learn Postman",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"id": "0cb7545e-ddc4-434b-bda7-fd4c384f7bd9",
 						"exec": [
-							"pm.environment.unset(\"listId\");",
+							"//pm.environment.unset(\"listId\");",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -224,7 +248,9 @@
 							"pm.test(\"card is not closed\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.closed).to.eql(false);",
-							"});"
+							"});",
+							"pm.environment.set(\"cardId\", pm.response.json().id);",
+							"console.log(\"Learn Postman Card Id: \" +  pm.response.json().id );"
 						],
 						"type": "text/javascript"
 					}
@@ -261,6 +287,67 @@
 						{
 							"key": "name",
 							"value": "Learn Postman"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Move Card-Move LearnPostman to DONE list",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8dc98f3e-86dd-4361-9b81-6363f1247c94",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.environment.unset(\"boardId\");",
+							"pm.environment.unset(\"listId\");",
+							"pm.environment.unset(\"doneListId\");",
+							"pm.environment.unset(\"cardId\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://api.trello.com/1/lists/{{listId}}/moveAllCards?idBoard={{boardId}}&idList={{doneListId}}&key={{trelloKey}}&token={{trelloToken}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"trello",
+						"com"
+					],
+					"path": [
+						"1",
+						"lists",
+						"{{listId}}",
+						"moveAllCards"
+					],
+					"query": [
+						{
+							"key": "idBoard",
+							"value": "{{boardId}}"
+						},
+						{
+							"key": "idList",
+							"value": "{{doneListId}}"
+						},
+						{
+							"key": "key",
+							"value": "{{trelloKey}}"
+						},
+						{
+							"key": "token",
+							"value": "{{trelloToken}}"
 						}
 					]
 				}
